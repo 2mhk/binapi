@@ -82,6 +82,21 @@ struct prices_t {
     const price_t& get_by_symbol(const char *sym) const;
 };
 
+struct common_strs_t {
+    struct common_str_t {
+        std::string symbol;     //useless now
+        std::string str_return;
+
+        static common_str_t construct(const flatjson::fjson& json);
+        friend std::ostream& operator<<(std::ostream& os, const common_str_t& f);
+    };
+
+    std::map<std::string, common_str_t> tickers;
+
+    static common_strs_t construct(const flatjson::fjson& json);
+    friend std::ostream& operator<<(std::ostream& os, const common_strs_t& f);
+};
+
 // https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
 struct _24hrs_tickers_t {
     struct _24hrs_ticker_t {

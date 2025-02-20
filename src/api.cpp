@@ -351,6 +351,7 @@ struct api::impl {
 
                         return res;
                     } else {
+                        //std::cout << typeid(R).name() << std::endl;
                         res.v = R::construct(json);
                     }
                 }
@@ -716,6 +717,16 @@ api::result<prices_t::price_t> api::price(const char *symbol, price_cb cb) {
 
 api::result<prices_t> api::prices(prices_cb cb) {
     return pimpl->post(false, "/api/v3/ticker/price", boost::beast::http::verb::get, {}, std::move(cb));
+}
+
+/*************************************************************************************************/
+
+api::result<common_strs_t> api::common_str(
+    std::string str_url,
+    std::initializer_list<std::pair<const char*, boost::variant<std::size_t, const char*>>> map,
+    common_str_cb cb) 
+{
+    return pimpl->post(false, str_url.c_str(), boost::beast::http::verb::get, map, std::move(cb));
 }
 
 /*************************************************************************************************/

@@ -16,6 +16,7 @@
 #include <type_traits>
 
 #include <boost/utility/string_view.hpp>
+#include <iostream>
 
 //#include <iostream> // TODO: comment out
 
@@ -187,6 +188,50 @@ const prices_t::price_t& prices_t::get_by_symbol(const char *sym) const {
     }
 
     assert(!"unreachable");
+}
+
+/*************************************************************************************************/
+
+common_strs_t::common_str_t
+common_strs_t::common_str_t::construct(const flatjson::fjson& json) {
+    if (!json.is_valid()) {     //pure json, differnt with others
+        std::cout << "common_strs_t::common_str_t::construct error, not valid" << std::endl;
+    }
+
+    common_strs_t::common_str_t res{};
+
+    res.symbol = (json.is_object() && json.contains("symbol")) ? json["symbol"].to_string() : "";
+    //res.symbol = "";
+    res.str_return = json.dump();
+    
+    return res;
+}
+
+std::ostream& operator<<(std::ostream& os, const common_strs_t::common_str_t& f) {
+    os
+        << "{"
+        << "\"symbol\":\"" << f.symbol << "\","
+        << "\"str_return\":" << f.str_return
+        << "}";
+
+    return os;
+}
+
+common_strs_t common_strs_t::construct(const flatjson::fjson& json) {
+    if (!json.is_valid()) {     //pure json, differnt with others
+        std::cout << "common_strs_t::construct error, not valid" <<std::endl;
+    }
+
+    common_strs_t res{};
+    res.tickers.emplace(std::string("common_str"), common_strs_t::common_str_t::construct(json));
+    
+    return res;
+}
+
+std::ostream& operator<<(std::ostream& os, const common_strs_t& f) {
+    os << f.tickers.at("common_str").str_return;
+
+    return os;
 }
 
 /*************************************************************************************************/

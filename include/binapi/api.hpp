@@ -113,6 +113,14 @@ struct api {
     result<prices_t>
     prices(prices_cb cb = {});
 
+    using common_str_cb = std::function<bool(const char* fl, int ec, std::string errmsg, common_strs_t res)>;
+    result<common_strs_t>
+    common_str(
+        std::string str_url, 
+        std::initializer_list<std::pair<const char*, boost::variant<std::size_t, const char*>>> map = {},
+        common_str_cb cb = {}
+    );
+
     // https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#current-average-price
     using avg_price_cb = std::function<bool(const char *fl, int ec, std::string errmsg, avg_price_t res)>;
     result<avg_price_t>
